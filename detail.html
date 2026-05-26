@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"/>
+  <title>Details – Isha Place, Marathahalli</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body class="detail-page">
+
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="logo">
+        <img src="assets/logo.png" alt="Isha Foundation"/>
+        <span class="sr-only">Home</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="programs.html">Programs</a></li>
+        <li><a href="volunteering.html">Volunteering</a></li>
+      </ul>
+      <button class="nav-toggle" onclick="toggleMenu()">&#9776;</button>
+    </div>
+    <ul class="mobile-menu" id="mobileMenu">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="programs.html">Programs</a></li>
+      <li><a href="volunteering.html">Volunteering</a></li>
+    </ul>
+  </nav>
+
+  <section class="detail-section">
+    <div class="container">
+      <a href="#" class="back-link" id="backLink">← Back to list</a>
+
+      <div id="detail-loading" class="loading-state">
+        <div class="loading-spinner"></div>
+        <p>Loading details...</p>
+      </div>
+
+      <div class="detail-layout" id="detail-layout" style="display:none">
+
+        <!-- LEFT: Content -->
+        <div class="detail-content" id="detail-content">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- RIGHT: Form -->
+        <div class="detail-sidebar">
+          <!-- Contact Form -->
+          <div class="contact-form-card">
+            <h3>Express Interest</h3>
+            <p class="form-subtitle">Leave your contact and we'll get in touch with you.</p>
+
+            <div class="form-error" id="formError">Something went wrong. Please try again.</div>
+
+            <div id="formBody">
+              <div class="form-group">
+                <label>Full Name *</label>
+                <input type="text" id="fieldName" placeholder="Your name"/>
+              </div>
+              <div class="form-group">
+                <label>WhatsApp Number *</label>
+                <input type="text" id="fieldPhone" data-ten-digit-phone placeholder="9876543210" title="10 digits only"/>
+              </div>
+              <div class="form-group">
+                <label>Area of Stay *</label>
+                <input type="text" id="fieldArea" placeholder="e.g. Jayanagar, Koramangala"/>
+              </div>
+              <button class="submit-btn" id="submitBtn" onclick="submitForm()">Submit Interest</button>
+            </div>
+
+            <div class="form-success" id="formSuccess" style="display:none">
+              <div class="success-icon">🙏</div>
+              <h4>Thank you!</h4>
+              <p>We've received your interest and will get in touch with you shortly.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Program volunteer (modal opens from program detail only) -->
+  <div
+    class="program-volunteer-overlay"
+    id="programVolunteerOverlay"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="pvModalTitle"
+    aria-hidden="true"
+    onclick="if (event.target === this) closeProgramVolunteerModal()"
+  >
+    <div class="program-volunteer-modal">
+      <button type="button" class="program-volunteer-close" onclick="closeProgramVolunteerModal()" aria-label="Close">✕</button>
+      <h3 id="pvModalTitle">Volunteer for this program</h3>
+      <p class="program-volunteer-sub">Share your details and we will get in touch with you.</p>
+      <div class="form-error program-volunteer-err" id="pvFormErr">Something went wrong. Please try again.</div>
+      <div id="pvFormBody">
+        <div class="form-group">
+          <label for="pvProgramName">Program name</label>
+          <input type="text" id="pvProgramName" readonly autocomplete="off" aria-readonly="true"/>
+        </div>
+        <div class="form-group">
+          <label for="pvName">Full Name *</label>
+          <input type="text" id="pvName" placeholder="Your name" autocomplete="name"/>
+        </div>
+        <div class="form-group">
+          <label for="pvPhone">WhatsApp Number *</label>
+          <input type="text" id="pvPhone" data-ten-digit-phone placeholder="9876543210" title="10 digits only" autocomplete="tel"/>
+        </div>
+        <div class="form-group">
+          <label for="pvArea">Area of Stay *</label>
+          <input type="text" id="pvArea" placeholder="e.g. Jayanagar, Koramangala"/>
+        </div>
+        <button type="button" class="submit-btn" id="pvSubmitBtn" onclick="submitProgramVolunteer()">Submit</button>
+      </div>
+      <div class="form-success program-volunteer-success" id="pvFormSuccess" style="display:none">
+        <div class="success-icon">🙏</div>
+        <h4>Thank you!</h4>
+        <p>We have received your volunteer interest for this program and will contact you shortly.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <h4 class="footer-logo">Isha Place, Marathahalli</h4>
+        </div>
+        <div>
+          <h5>Quick Links</h5>
+          <ul>
+            <li><a href="programs.html">Programs</a></li>
+            <li><a href="volunteering.html">Volunteering</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5>Contact</h5>
+          <p>Email to be updated</p>
+          <p>Marathahalli, Bengaluru</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 Isha Place, Marathahalli. All Rights Reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="whatsapp-validate.js"></script>
+  <script src="config.js"></script>
+  <script>
+    function toggleMenu() {
+      document.getElementById('mobileMenu').classList.toggle('open');
+    }
+
+    function escapeHtmlAttr(s) {
+      return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+    }
+
+    function escapeHtml(s) {
+      return String(s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function fixDriveUrl(url) {
+      if (!url || typeof url !== 'string') return url;
+      const u = url.trim();
+      if (/^https:\/\/lh\d*\.googleusercontent\.com\//i.test(u)) return u;
+      if (/thumbnail\?.*\bid=/.test(u)) return u;
+      const match = u.match(/\/d\/([a-zA-Z0-9_-]+)/);
+      if (match) return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w1200`;
+      const ucMatch = u.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+      if (ucMatch) return `https://drive.google.com/thumbnail?id=${ucMatch[1]}&sz=w1200`;
+      return u;
+    }
+
+    // Parse URL params
+    const params = new URLSearchParams(window.location.search);
+    const itemId = params.get('id');
+    const itemType = params.get('type'); // "program" or "volunteering"
+
+    // Set back link
+    const backLink = document.getElementById('backLink');
+    if (itemType === 'program') {
+      backLink.href = 'programs.html';
+      backLink.textContent = '← Back to Programs';
+    } else {
+      backLink.href = 'volunteering.html';
+      backLink.textContent = '← Back to Volunteering';
+    }
+
+    let currentItem = null;
+
+    async function loadDetail() {
+      const loading = document.getElementById('detail-loading');
+      const layout = document.getElementById('detail-layout');
+
+      try {
+        const res = await fetch(`${APPS_SCRIPT_URL}?type=${itemType === 'program' ? 'programs' : 'volunteering'}&id=${itemId}`);
+        const data = await res.json();
+
+        if (!data.item) {
+          loading.innerHTML = `<p>Item not found.</p>`;
+          return;
+        }
+
+        currentItem = data.item;
+
+        document.title = `${data.item.title} – Isha Place, Marathahalli`;
+
+        const registerUrl = data.item.registerlink || data.item.registerLink;
+        const registerLinkHtml =
+          itemType === 'program' && registerUrl
+            ? `<a href="${escapeHtmlAttr(registerUrl)}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-register">Register for this program</a>`
+            : '';
+        const volunteerBtnHtml =
+          itemType === 'program'
+            ? `<button type="button" class="btn btn-outline btn-volunteer-program" onclick="openProgramVolunteerModal()">Volunteer for this program</button>`
+            : '';
+        const registerSection =
+          registerLinkHtml || volunteerBtnHtml
+            ? `<div class="detail-register"><div class="detail-register-actions">${registerLinkHtml}${volunteerBtnHtml}</div></div>`
+            : '';
+
+        const timingsRaw = data.item.timings && String(data.item.timings).trim();
+        const timingsHtml = timingsRaw
+          ? `<span class="detail-meta-timings" data-icon="🕐">${escapeHtml(timingsRaw)}</span>`
+          : '';
+        const dateHtml = data.item.date
+          ? `<span data-icon="📅">${escapeHtml(data.item.date)}</span>`
+          : '';
+        const datetimeBlock =
+          dateHtml || timingsHtml
+            ? `<div class="detail-meta-datetime">${dateHtml}${timingsHtml}</div>`
+            : '';
+
+        // Build detail content
+        const content = document.getElementById('detail-content');
+        content.innerHTML = `
+          ${data.item.image
+            ? `<div class="detail-image"><img src="${fixDriveUrl(data.item.image)}" alt="${data.item.title}"/></div>`
+            : ''}
+          <div class="detail-meta">
+            ${datetimeBlock}
+            ${data.item.location ? `<span data-icon="📍">${escapeHtml(data.item.location)}</span>` : ''}
+            ${data.item.duration ? `<span data-icon="⏱">${escapeHtml(data.item.duration)}</span>` : ''}
+          </div>
+          <h2>${data.item.title}</h2>
+          <div class="description">${data.item.description || ''}</div>
+          ${registerSection}
+        `;
+
+        loading.style.display = 'none';
+        layout.style.display = 'grid';
+
+      } catch (err) {
+        loading.innerHTML = `<p>Could not load details. Please go back and try again.</p>`;
+        console.error(err);
+      }
+    }
+
+    let programVolunteerEscapeHandler = null;
+
+    function openProgramVolunteerModal() {
+      if (itemType !== 'program' || !currentItem) return;
+      if (programVolunteerEscapeHandler) {
+        document.removeEventListener('keydown', programVolunteerEscapeHandler);
+        programVolunteerEscapeHandler = null;
+      }
+      const overlay = document.getElementById('programVolunteerOverlay');
+      const errEl = document.getElementById('pvFormErr');
+      document.getElementById('pvFormBody').style.display = 'block';
+      document.getElementById('pvFormSuccess').style.display = 'none';
+      document.getElementById('pvName').value = '';
+      document.getElementById('pvPhone').value = '';
+      document.getElementById('pvArea').value = '';
+      document.getElementById('pvProgramName').value = currentItem.title || '';
+      errEl.style.display = 'none';
+      const btn = document.getElementById('pvSubmitBtn');
+      btn.disabled = false;
+      btn.textContent = 'Submit';
+      overlay.classList.add('open');
+      overlay.setAttribute('aria-hidden', 'false');
+      programVolunteerEscapeHandler = function (e) {
+        if (e.key === 'Escape') closeProgramVolunteerModal();
+      };
+      document.addEventListener('keydown', programVolunteerEscapeHandler);
+      document.getElementById('pvName').focus();
+    }
+
+    function closeProgramVolunteerModal() {
+      const overlay = document.getElementById('programVolunteerOverlay');
+      overlay.classList.remove('open');
+      overlay.setAttribute('aria-hidden', 'true');
+      if (programVolunteerEscapeHandler) {
+        document.removeEventListener('keydown', programVolunteerEscapeHandler);
+        programVolunteerEscapeHandler = null;
+      }
+    }
+
+    async function submitProgramVolunteer() {
+      if (itemType !== 'program' || !currentItem) return;
+      const name = document.getElementById('pvName').value.trim();
+      const area = document.getElementById('pvArea').value.trim();
+      const errEl = document.getElementById('pvFormErr');
+      const btn = document.getElementById('pvSubmitBtn');
+
+      errEl.style.display = 'none';
+
+      if (!name || !area) {
+        errEl.textContent = 'Please fill in all required fields.';
+        errEl.style.display = 'block';
+        return;
+      }
+      const phoneCheck = validateWhatsAppNumber(document.getElementById('pvPhone').value);
+      if (!phoneCheck.ok) {
+        errEl.textContent = phoneCheck.message;
+        errEl.style.display = 'block';
+        return;
+      }
+      const phone = phoneCheck.normalized;
+
+      btn.disabled = true;
+      btn.textContent = 'Submitting...';
+
+      try {
+        await fetch(APPS_SCRIPT_URL, {
+          method: 'POST',
+          body: JSON.stringify({
+            formType: 'programVolunteer',
+            name,
+            phone,
+            area,
+            programName: currentItem.title || '',
+            programId: currentItem.id || '',
+            timestamp: new Date().toISOString(),
+          }),
+        });
+
+        document.getElementById('pvFormBody').style.display = 'none';
+        document.getElementById('pvFormSuccess').style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = 'Submit';
+      } catch (err) {
+        errEl.textContent = 'Submission failed. Please try again.';
+        errEl.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = 'Submit';
+        console.error(err);
+      }
+    }
+
+    async function submitForm() {
+      const name = document.getElementById('fieldName').value.trim();
+      const area = document.getElementById('fieldArea').value.trim();
+      const errEl = document.getElementById('formError');
+      const btn = document.getElementById('submitBtn');
+
+      errEl.style.display = 'none';
+
+      if (!name || !area) {
+        errEl.textContent = 'Please fill in all required fields.';
+        errEl.style.display = 'block';
+        return;
+      }
+      const phoneCheck = validateWhatsAppNumber(document.getElementById('fieldPhone').value);
+      if (!phoneCheck.ok) {
+        errEl.textContent = phoneCheck.message;
+        errEl.style.display = 'block';
+        return;
+      }
+      const phone = phoneCheck.normalized;
+
+      btn.disabled = true;
+      btn.textContent = 'Submitting...';
+
+      try {
+        const payload =
+          itemType === 'program'
+            ? {
+                formType: 'programInterest',
+                name,
+                phone,
+                area,
+                programName: currentItem ? currentItem.title : '',
+                programId: currentItem ? currentItem.id : '',
+                timestamp: new Date().toISOString()
+              }
+            : {
+                formType: 'volunteeringInterest',
+                name,
+                phone,
+                area,
+                opportunityName: currentItem ? currentItem.title : '',
+                opportunityId: currentItem ? currentItem.id : '',
+                timestamp: new Date().toISOString()
+              };
+
+        await fetch(APPS_SCRIPT_URL, {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        });
+
+        document.getElementById('formBody').style.display = 'none';
+        document.getElementById('formSuccess').style.display = 'block';
+
+      } catch (err) {
+        errEl.textContent = 'Submission failed. Please try again.';
+        errEl.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = 'Submit Interest';
+      }
+    }
+
+    loadDetail();
+  </script>
+</body>
+</html>
