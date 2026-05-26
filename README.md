@@ -4,6 +4,8 @@ Static website for **Isha Place, Marathahalli** (programs, volunteering, and con
 
 Repository: [github.com/sahajkedia/ip-mh-web](https://github.com/sahajkedia/ip-mh-web)
 
+**Live site:** [sahajkedia.github.io/ip-mh-web](https://sahajkedia.github.io/ip-mh-web/) (GitHub Pages)
+
 ## Run locally
 
 From this folder:
